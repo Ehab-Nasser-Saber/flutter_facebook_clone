@@ -6,6 +6,7 @@ import 'package:flutter_facebook_responsive_ui/widgets/profile_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../models/post_model.dart';
+import 'responsive.dart';
 
 class PostContainer extends StatelessWidget {
   final Post post;
@@ -13,41 +14,48 @@ class PostContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      padding: EdgeInsets.symmetric(vertical: 8),
-      // height: 100,
-      color: Colors.white,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _PostHeader(post: post),
-                const SizedBox(
-                  height: 4,
-                ),
-                Text(post.caption),
-                post.imageUrl != null
-                    ? const SizedBox.shrink()
-                    : const SizedBox(
-                        height: 6,
-                      )
-              ],
+    final bool isDesktop = Responsive.isDesktop(context);
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: isDesktop ? 5 : 0),
+      elevation: isDesktop ? 1 : 0,
+      shape: isDesktop
+          ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+          : null,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        // height: 100,
+        color: Colors.white,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _PostHeader(post: post),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(post.caption),
+                  post.imageUrl != null
+                      ? const SizedBox.shrink()
+                      : const SizedBox(
+                          height: 6,
+                        )
+                ],
+              ),
             ),
-          ),
-          post.imageUrl != null
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: CachedNetworkImage(imageUrl: post.imageUrl))
-              : const SizedBox.shrink(),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: _PostStats(post: post),
-          )
-        ],
+            post.imageUrl != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: CachedNetworkImage(imageUrl: post.imageUrl))
+                : const SizedBox.shrink(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: _PostStats(post: post),
+            )
+          ],
+        ),
       ),
     );
   }
